@@ -128,6 +128,9 @@ public class Utils {
 			ArrayList<Integer> stationTasks;
 			for(int i = 1 ; i <= stationNumber ; i++ ) {
 				int numberOfTasksInStation = random.nextInt(tasksPerStation);
+				if(numberOfTasksInStation == 0) {
+					numberOfTasksInStation++;
+				}
 				if(i == 1) {
 					stationTasks = new ArrayList<Integer>();
 					for(int j = 0 ; j < numberOfTasksInStation - 1; j++ ) {

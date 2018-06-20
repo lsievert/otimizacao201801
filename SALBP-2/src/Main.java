@@ -32,6 +32,7 @@ public class Main {
 		ArrayList<Map<Integer, ArrayList<Integer>>> neighbors;
 		bestFoundValue = utils.evaluateSolution(currentSolution, nodeList);
 		tabu.add(currentSolution);
+		System.out.println(currentSolution);
 		while(currentIteration < MAX_ITERATION) {
 			neighbors = utils.findNeighborhood(currentSolution, STATION_NUM, numOfTasks, dependencies);
 		}
