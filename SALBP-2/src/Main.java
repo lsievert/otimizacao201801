@@ -52,7 +52,6 @@ public class Main {
 					bestNeighborValue = Collections.min(neighborsValue);
 					bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
 					System.out.println("indice melhor vizinho" + bestNeighborIndex );
-					System.exit(0);
 					if(tabu.contains(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)))) {
 						neighbors.remove(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)));
 					}

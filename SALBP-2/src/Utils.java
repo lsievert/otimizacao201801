@@ -2,6 +2,7 @@ import java.awt.font.NumericShaper.Range;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class Utils {
+public class Utils{
 	
 		private static final String END_OF_FILE = "-1,-1";
 		private static final int TOTAL_NEIGHBOR = 30;
@@ -74,17 +75,18 @@ public class Utils {
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
 					attempts = 1;
-					while(attempts != 50) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 50;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
 							nextStation = currentNeighborBuild.get(i+1);
 							ArrayList<Integer> randomTasks = randValues(j, currentStation);
-							for(int randomTask : randomTasks) {
-								taskNumberCurrentStation = currentStation.get(randomTask);
+							Collections.sort(randomTasks);
+							for(int randomTask = randomTasks.size() ; randomTask > 0 ; randomTask--) {
+								taskNumberCurrentStation = currentStation.get(randomTasks.get(randomTask - 1));
 								currentStation.remove(new Integer(taskNumberCurrentStation));
 								nextStation.add(taskNumberCurrentStation);
 							}
@@ -104,17 +106,18 @@ public class Utils {
 					}
 
 					attempts = 1;
-					while(attempts != 50) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 50;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
 							nextStation = currentNeighborBuild.get(i+1);
 							ArrayList<Integer> randomTasks = randValues(j, nextStation);
-							for(int randomTask : randomTasks) {
-								taskNumberNextStation = nextStation.get(randomTask);
+							Collections.sort(randomTasks);
+							for(int randomTask = randomTasks.size() ; randomTask > 0 ; randomTask--) {
+								taskNumberNextStation = nextStation.get(randomTasks.get(randomTask - 1));
 								nextStation.remove(new Integer(taskNumberNextStation));
 								currentStation.add(taskNumberNextStation);
 							}
@@ -134,8 +137,6 @@ public class Utils {
 					}
 				}
 			}
-			System.out.println(neighbors);
-			System.exit(0);
 			return neighbors;
 		}
 		
@@ -302,4 +303,6 @@ public class Utils {
 			}
 			return true;
 		}
+
+		
 }
