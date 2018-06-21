@@ -1,3 +1,4 @@
+import java.awt.font.NumericShaper.Range;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -12,10 +13,23 @@ public class Utils {
 	
 		private static final String END_OF_FILE = "-1,-1";
 		private static final int TOTAL_NEIGHBOR = 30;
-		private static final int MOVEMENT = 1;
+		private static final int MOVEMENT = 3;
 		
 		
-	    private Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
+	    private ArrayList<Integer> randValues(int quantityOfNumbers, ArrayList<Integer> station){
+	    	Random random = new Random();
+	    	int randomNumber;
+	    	ArrayList<Integer> numbers = new ArrayList<Integer>();
+	    	while(numbers.size() == quantityOfNumbers) {
+	    		randomNumber = random.nextInt(station.size());
+	    		if(!numbers.contains(new Integer(randomNumber))) {
+	    			numbers.add(randomNumber);
+	    		}
+	    	}
+	    	return numbers;
+	    }
+		
+		private Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
 	    	Map<Integer, ArrayList<Integer>> copy = new HashMap<Integer, ArrayList<Integer>>();
 	    	ArrayList<Integer> copyTasks;
 	    	ArrayList<Integer> originalTasks;
@@ -52,78 +66,67 @@ public class Utils {
 			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
 			Map<Integer, ArrayList<Integer>> currentNeighborBuild;
 			Random random = new Random();
-			int moviment;
 			int attempts;
-			int neighborsFound;
 			int taskNumberCurrentStation;
 			int taskNumberNextStation;
 			ArrayList<Integer> currentStation;
 			ArrayList<Integer> nextStation;
+			
 			for(int i = 1; i <= stationNumber - 1; i++) {
-				attempts = 1;
-				neighborsFound = 1;
-				while(neighborsFound <= TOTAL_NEIGHBOR && attempts < 100) {
-					moviment = 1;
-					while(moviment <= MOVEMENT && attempts < 100) {
+				for(int j = 1 ; j<= MOVEMENT ; j++) {
+					attempts = 1;
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
-						if(currentNeighborBuild.get(i).size() > 1) {
+						if(currentNeighborBuild.get(i).size() <= j) {
+							attempts = 100;
+						}
+						else {
 							currentStation = currentNeighborBuild.get(i);
 							nextStation = currentNeighborBuild.get(i+1);
-							int randomTask = random.nextInt(currentStation.size());
-							if(randomTask == currentStation.size()) {
-								randomTask --;
+							ArrayList<Integer> randomTasks = randValues(j, currentStation);
+							for(int randomTask : randomTasks) {
+								taskNumberCurrentStation = currentStation.get(randomTask);
+								currentStation.remove(new Integer(taskNumberCurrentStation));
+								nextStation.add(taskNumberCurrentStation);
 							}
-							taskNumberCurrentStation = currentStation.get(randomTask);
-							currentStation.remove(new Integer(taskNumberCurrentStation));
-							nextStation.add(taskNumberCurrentStation);
 							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
 									neighbors.add(currentNeighborBuild);
-									moviment++;
 									attempts++;
-									neighborsFound++;
 								}
-							}else {
-								attempts++;
+								else {
+									attempts++;
+								}
 							}
-						}
-						else {
-							moviment++;
-							attempts++;
 						}
 					}
 				}
 				
-				attempts = 1;
-				neighborsFound = 1;
-				while(neighborsFound <= TOTAL_NEIGHBOR && attempts < 100) {
-					moviment = 1;
-					while(moviment <= MOVEMENT && attempts < 100) {
+				for(int j = 1 ; j<= MOVEMENT ; j++) {
+					attempts = 1;
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
-						if(currentNeighborBuild.get(i+1).size() > 1) {
+						if(currentNeighborBuild.get(i+1).size() <= j) {
+							attempts = 100;
+						}
+						else {
 							currentStation = currentNeighborBuild.get(i);
 							nextStation = currentNeighborBuild.get(i+1);
-							int randomTask = random.nextInt(nextStation.size());
-							if(randomTask == nextStation.size()) {
-								randomTask --;
+							ArrayList<Integer> randomTasks = randValues(j, nextStation);
+							for(int randomTask : randomTasks) {
+								taskNumberNextStation = nextStation.get(randomTask);
+								nextStation.remove(new Integer(taskNumberNextStation));
+								currentStation.add(taskNumberNextStation);
 							}
-							taskNumberNextStation = nextStation.get(randomTask);
-							nextStation.remove(new Integer(taskNumberNextStation));
-							currentStation.add(taskNumberNextStation);
 							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
 									neighbors.add(currentNeighborBuild);
-									moviment++;
 									attempts++;
-									neighborsFound++;
 								}
-							}else {
-								attempts++;
+								else {
+									attempts++;
+								}
 							}
-						}
-						else {
-							moviment++;
-							attempts++;
 						}
 					}
 				}
