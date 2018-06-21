@@ -1,0 +1,41 @@
+#INTRODUÇÃO
+
+<Paragrafo sobre o trabalho e meta-heuristica>
+
+#PROBLEMA
+
+<Paragrafo sobre o problema>
+
+<Formulação matematica>
+
+<Implementação em MathProg>
+
+#DESCRIÇÃO ALGORITMO
+
+<Paragrafo introdutorio da seção, linguagem da implementação etc >
+
+<Representação do problema>
+
+<Principais estruturas de dados>
+
+<Geração da solução inicial>
+
+<Vizinhança e a estratégia para seleção dos vizinhos>
+
+<Parâmetro(s) do método, com os valores utilizados nos experimentos>
+
+<O(s) critério(s) de parada do algoritmo>
+
+#TABELA
+
+#ANALISE
+
+<Paragrafo inicial da seção de analise>
+
+<Paragrafo de analise>
+
+#CONCLUSOES
+
+<Um ou dois paragrafos de conclusão>
+
+#REFERENCIAS
