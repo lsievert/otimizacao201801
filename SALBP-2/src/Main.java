@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
 public class Main {
 
 	public static final int MAX_ITERATION = 200;
-	public static final int STATION_NUM = 3;
+	public static final int STATION_NUM = 5;
 	
 	public static void main(String[] args) {
 		
@@ -23,18 +24,53 @@ public class Main {
 		utils.readArrayTasks(arrayTasks, numOfTasks);
 		utils.buildFirstSolution(arrayTasks, currentSolution, STATION_NUM, numOfTasks, dependencies);
 		
-		int currentIteration = 0;
+		int totalIteration = 0;
 		int bestFoundValue;
+		int lastImproveIteration = 0;
 		Map<Integer, ArrayList<Integer>> bestSolution;
-		int found;
 		ArrayList<Map<Integer, ArrayList<Integer>>> tabu = new ArrayList<Map<Integer, ArrayList<Integer>>>();
-		ArrayList<Integer> solutionTabuValue;
 		ArrayList<Map<Integer, ArrayList<Integer>>> neighbors;
+		
 		bestFoundValue = utils.evaluateSolution(currentSolution, nodeList);
 		tabu.add(currentSolution);
-		System.out.println(currentSolution);
-		while(currentIteration < MAX_ITERATION) {
+		ArrayList<Integer> neighborsValue;
+		while(lastImproveIteration < 500) {
+			totalIteration++;
+			lastImproveIteration++;
+			if(totalIteration % 10 == 0) {
+				tabu.remove(0);
+			}
+			int bestNeighborIndex = 0;
+			int bestNeighborValue = 0;
+			boolean nextSolutionFound = false;
+			neighborsValue = new ArrayList<Integer>();
 			neighbors = utils.findNeighborhood(currentSolution, STATION_NUM, numOfTasks, dependencies);
+			System.out.println("vizinhos" + neighbors);
+			for(int neighbor = 0 ; neighbor < neighbors.size() ; neighbor ++) {
+				neighborsValue.add(utils.evaluateSolution(neighbors.get(neighbor), nodeList));
+			}
+			System.out.println(neighborsValue);
+			while(!nextSolutionFound) {
+					bestNeighborValue = Collections.min(neighborsValue);
+					bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
+					System.out.println("indice melhor vizinho" + bestNeighborIndex );
+					if(tabu.contains(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)))) {
+						neighbors.remove(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)));
+					}
+					else {
+						if(bestNeighborValue < bestFoundValue) {
+							bestFoundValue = bestNeighborValue;
+							bestSolution = neighbors.get(bestNeighborIndex);
+							lastImproveIteration = 0;
+							tabu.add(bestSolution);
+						}
+					currentSolution = neighbors.get(bestNeighborIndex);
+					tabu.add(currentSolution);
+					nextSolutionFound = true;
+				}
+			}
+			System.out.println(currentSolution);
 		}
+		System.out.println(bestFoundValue);
 	}
 }

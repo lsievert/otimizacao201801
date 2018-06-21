@@ -11,7 +11,7 @@ import java.util.Random;
 public class Utils {
 	
 		private static final String END_OF_FILE = "-1,-1";
-		private static final int TOTAL_NEIGHBOR = 3;
+		private static final int TOTAL_NEIGHBOR = 30;
 		private static final int MOVEMENT = 1;
 		
 		
@@ -40,7 +40,6 @@ public class Utils {
 	    		for(int task : stationTasks) {
 	    			totalValue =  totalValue + taskCost.get(task);
 	    		}
-	    		System.out.println(totalValue);
 	    		if(totalValue > maxValue) {
 	    			maxValue = totalValue;
 	    		}
@@ -56,10 +55,10 @@ public class Utils {
 			int moviment;
 			int attempts;
 			int neighborsFound;
-			ArrayList<Integer> currentStation;
-			ArrayList<Integer> nextStation;
 			int taskNumberCurrentStation;
 			int taskNumberNextStation;
+			ArrayList<Integer> currentStation;
+			ArrayList<Integer> nextStation;
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				attempts = 1;
 				neighborsFound = 1;
@@ -67,18 +66,29 @@ public class Utils {
 					moviment = 1;
 					while(moviment <= MOVEMENT && attempts < 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
-						currentStation = currentNeighborBuild.get(i);
-						nextStation = currentNeighborBuild.get(i+1);
-						taskNumberCurrentStation = currentStation.get(random.nextInt(currentStation.size() - 1));
-						currentStation.remove(new Integer(taskNumberCurrentStation));
-						nextStation.add(taskNumberCurrentStation);
-						if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-							neighbors.add(currentNeighborBuild);
-							moviment++;
-							attempts++;
-							neighborsFound++;
+						if(currentNeighborBuild.get(i).size() > 1) {
+							currentStation = currentNeighborBuild.get(i);
+							nextStation = currentNeighborBuild.get(i+1);
+							int randomTask = random.nextInt(currentStation.size());
+							if(randomTask == currentStation.size()) {
+								randomTask --;
+							}
+							taskNumberCurrentStation = currentStation.get(randomTask);
+							currentStation.remove(new Integer(taskNumberCurrentStation));
+							nextStation.add(taskNumberCurrentStation);
+							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
+								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
+									neighbors.add(currentNeighborBuild);
+									moviment++;
+									attempts++;
+									neighborsFound++;
+								}
+							}else {
+								attempts++;
+							}
 						}
 						else {
+							moviment++;
 							attempts++;
 						}
 					}
@@ -90,26 +100,34 @@ public class Utils {
 					moviment = 1;
 					while(moviment <= MOVEMENT && attempts < 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
-						currentStation = currentNeighborBuild.get(i);
-						nextStation = currentNeighborBuild.get(i+1);
-						taskNumberNextStation = nextStation.get(random.nextInt(nextStation.size() - 1));
-						nextStation.remove(new Integer(taskNumberNextStation));
-						currentStation.add(taskNumberNextStation);
-						if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-							neighbors.add(currentNeighborBuild);
-							moviment++;
-							attempts++;
-							neighborsFound++;
+						if(currentNeighborBuild.get(i+1).size() > 1) {
+							currentStation = currentNeighborBuild.get(i);
+							nextStation = currentNeighborBuild.get(i+1);
+							int randomTask = random.nextInt(nextStation.size());
+							if(randomTask == nextStation.size()) {
+								randomTask --;
+							}
+							taskNumberNextStation = nextStation.get(randomTask);
+							nextStation.remove(new Integer(taskNumberNextStation));
+							currentStation.add(taskNumberNextStation);
+							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
+								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
+									neighbors.add(currentNeighborBuild);
+									moviment++;
+									attempts++;
+									neighborsFound++;
+								}
+							}else {
+								attempts++;
+							}
 						}
 						else {
+							moviment++;
 							attempts++;
 						}
 					}
 				}
 			}
-			System.out.println(neighbors);
-			System.out.println(neighbors.size());
-			System.exit(0);
 			return neighbors;
 		}
 		
