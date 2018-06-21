@@ -45,15 +45,14 @@ public class Main {
 			boolean nextSolutionFound = false;
 			neighborsValue = new ArrayList<Integer>();
 			neighbors = utils.findNeighborhood(currentSolution, STATION_NUM, numOfTasks, dependencies);
-			System.out.println("vizinhos" + neighbors);
 			for(int neighbor = 0 ; neighbor < neighbors.size() ; neighbor ++) {
 				neighborsValue.add(utils.evaluateSolution(neighbors.get(neighbor), nodeList));
 			}
-			System.out.println(neighborsValue);
 			while(!nextSolutionFound) {
 					bestNeighborValue = Collections.min(neighborsValue);
 					bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
 					System.out.println("indice melhor vizinho" + bestNeighborIndex );
+					System.exit(0);
 					if(tabu.contains(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)))) {
 						neighbors.remove(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)));
 					}

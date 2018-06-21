@@ -20,7 +20,7 @@ public class Utils {
 	    	Random random = new Random();
 	    	int randomNumber;
 	    	ArrayList<Integer> numbers = new ArrayList<Integer>();
-	    	while(numbers.size() == quantityOfNumbers) {
+	    	while(numbers.size() != quantityOfNumbers) {
 	    		randomNumber = random.nextInt(station.size());
 	    		if(!numbers.contains(new Integer(randomNumber))) {
 	    			numbers.add(randomNumber);
@@ -65,7 +65,6 @@ public class Utils {
 		public ArrayList<Map<Integer, ArrayList<Integer>>> findNeighborhood(Map<Integer, ArrayList<Integer>> currentSolution, int stationNumber, int numberOfTasks, Map<Integer, ArrayList<Integer>>  dependencies ){
 			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
 			Map<Integer, ArrayList<Integer>> currentNeighborBuild;
-			Random random = new Random();
 			int attempts;
 			int taskNumberCurrentStation;
 			int taskNumberNextStation;
@@ -75,10 +74,10 @@ public class Utils {
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 50) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 100;
+							attempts = 50;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -98,16 +97,17 @@ public class Utils {
 									attempts++;
 								}
 							}
+							else {
+								attempts++;
+							}
 						}
 					}
-				}
-				
-				for(int j = 1 ; j<= MOVEMENT ; j++) {
+
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 50) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 100;
+							attempts = 50;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -127,10 +127,15 @@ public class Utils {
 									attempts++;
 								}
 							}
+							else {
+								attempts++;
+							}
 						}
 					}
 				}
 			}
+			System.out.println(neighbors);
+			System.exit(0);
 			return neighbors;
 		}
 		
