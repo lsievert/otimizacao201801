@@ -3,12 +3,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 
 
 public class Main {
 
-	public static final int MAX_ITERATION = 200;
-	public static final int STATION_NUM = 5;
+	//public static final int MAX_ITERATION = 200;
+	public static final int STATION_NUM = 8;
 	
 	public static void main(String[] args) {
 		
@@ -32,12 +34,12 @@ public class Main {
 		ArrayList<Map<Integer, ArrayList<Integer>>> neighbors;
 		
 		bestFoundValue = utils.evaluateSolution(currentSolution, nodeList);
-		tabu.add(currentSolution);
+		tabu.add(utils.mapCopy(currentSolution));
 		ArrayList<Integer> neighborsValue;
-		while(lastImproveIteration < 500) {
+		while(lastImproveIteration < 1000) {
 			totalIteration++;
 			lastImproveIteration++;
-			if(totalIteration % 10 == 0) {
+			if(tabu.size() > 10 ) {
 				tabu.remove(0);
 			}
 			int bestNeighborIndex = 0;
@@ -51,19 +53,19 @@ public class Main {
 			while(!nextSolutionFound) {
 					bestNeighborValue = Collections.min(neighborsValue);
 					bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
-					System.out.println("indice melhor vizinho" + bestNeighborIndex );
-					if(tabu.contains(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)))) {
-						neighbors.remove(new HashMap<Integer, ArrayList<Integer>>(neighbors.get(bestNeighborIndex)));
+					System.out.println(neighborsValue);
+					System.out.println(tabu.size());
+					if(tabu.contains(neighbors.get(bestNeighborIndex))) {
+						neighbors.remove(neighbors.get(bestNeighborIndex));
 					}
 					else {
 						if(bestNeighborValue < bestFoundValue) {
 							bestFoundValue = bestNeighborValue;
-							bestSolution = neighbors.get(bestNeighborIndex);
+							bestSolution = utils.mapCopy(neighbors.get(bestNeighborIndex));
 							lastImproveIteration = 0;
-							tabu.add(bestSolution);
 						}
-					currentSolution = neighbors.get(bestNeighborIndex);
-					tabu.add(currentSolution);
+					currentSolution = utils.mapCopy(neighbors.get(bestNeighborIndex));
+					tabu.add(utils.mapCopy(neighbors.get(bestNeighborIndex)));
 					nextSolutionFound = true;
 				}
 			}

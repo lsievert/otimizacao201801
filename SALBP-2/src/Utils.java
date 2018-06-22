@@ -1,8 +1,7 @@
-import java.awt.font.NumericShaper.Range;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Utils{
 	    	return numbers;
 	    }
 		
-		private Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
+		public Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
 	    	Map<Integer, ArrayList<Integer>> copy = new HashMap<Integer, ArrayList<Integer>>();
 	    	ArrayList<Integer> copyTasks;
 	    	ArrayList<Integer> originalTasks;
@@ -90,9 +89,9 @@ public class Utils{
 								currentStation.remove(new Integer(taskNumberCurrentStation));
 								nextStation.add(taskNumberCurrentStation);
 							}
-							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
+							if(!neighbors.contains(currentNeighborBuild)) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-									neighbors.add(currentNeighborBuild);
+									neighbors.add(mapCopy(currentNeighborBuild));
 									attempts++;
 								}
 								else {
@@ -121,9 +120,9 @@ public class Utils{
 								nextStation.remove(new Integer(taskNumberNextStation));
 								currentStation.add(taskNumberNextStation);
 							}
-							if(!neighbors.contains(new HashMap<Integer, ArrayList<Integer>>(currentNeighborBuild))) {
+							if(!neighbors.contains(currentNeighborBuild)) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-									neighbors.add(currentNeighborBuild);
+									neighbors.add(mapCopy(currentNeighborBuild));
 									attempts++;
 								}
 								else {
@@ -188,64 +187,10 @@ public class Utils{
 			}
 		}
 		
-		//Permuta as tasks entre as estações até achar uma combinação válida para solução inicial
-		private void permutingUntilValidSolution(Map<Integer, ArrayList<Integer>> solution, int stationNumber, Map<Integer, ArrayList<Integer>> dependencies) {
-			Map<Integer, ArrayList<Integer>> currentSolutionPermuted;
-			Random random = new Random();
-			int swapNumber;
-			ArrayList<Integer> currentStation;
-			ArrayList<Integer> nextStation;
-			int taskNumberCurrentStationSwap;
-			int taskNumberNextStationSwap;
-			boolean valid = false;
-			while(!valid) {
-				currentSolutionPermuted = new HashMap<Integer, ArrayList<Integer>>();
-				for(int i = 1; i < stationNumber; i++) {
-					currentStation = solution.get(i);
-					nextStation = solution.get(i+1);
-					swapNumber = 1;
-					while(swapNumber <= MOVEMENT) {
-						taskNumberCurrentStationSwap = currentStation.get(random.nextInt(currentStation.size() - 1));
-						taskNumberNextStationSwap = nextStation.get(random.nextInt(nextStation.size() - 1));
-						currentStation.remove(new Integer(taskNumberCurrentStationSwap));
-						currentStation.add(taskNumberNextStationSwap);
-						nextStation.remove(new Integer(taskNumberNextStationSwap));
-						nextStation.add(taskNumberCurrentStationSwap);
-						swapNumber++;
-					}
-					currentSolutionPermuted.put(i, currentStation);
-					currentSolutionPermuted.put(i+1, nextStation);
-				}
-				/*
-				currentStation = currentSolutionPermuted.get(stationNumber);
-				nextStation = currentSolutionPermuted.get(1);
-				swapNumber = 1;
-				while(swapNumber <= SWAP_MAX) {
-					taskNumberCurrentStationSwap = currentStation.get(random.nextInt(currentStation.size() - 1));
-					taskNumberNextStationSwap = nextStation.get(random.nextInt(nextStation.size() - 1));
-					currentStation.remove(new Integer(taskNumberCurrentStationSwap));
-					currentStation.add(taskNumberNextStationSwap);
-					nextStation.remove(new Integer(taskNumberNextStationSwap));
-					nextStation.add(taskNumberCurrentStationSwap);
-					swapNumber++;
-				}
-				currentSolutionPermuted.put(stationNumber, currentStation);
-				currentSolutionPermuted.put(1, nextStation);
-				System.out.println(solution);
-				*/
-				System.out.println(currentSolutionPermuted);
-				System.exit(0);
-				if(checkSolutionValidate(currentSolutionPermuted, dependencies)) {
-					valid = true;
-					System.out.println(currentSolutionPermuted);
-					
-				}
-			}
-			System.exit(0);
-		}
+		
 		
 		public int readNodeList(Map<Integer, Integer> nodeList, Map<Integer, ArrayList<Integer>> dependencies){
-			try(FileReader nodeListArq = new FileReader("LUTZ3.IN2")){
+			try(FileReader nodeListArq = new FileReader("HAHN.IN2")){
 				BufferedReader readNodeList = new BufferedReader(nodeListArq);
 				int numberTasks = Integer.parseInt(readNodeList.readLine());
 				int taskCost;
