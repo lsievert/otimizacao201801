@@ -10,7 +10,7 @@ import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 public class Main {
 
 	//public static final int MAX_ITERATION = 200;
-	public static final int STATION_NUM = 8;
+	public static final int STATION_NUM = 20;
 	
 	public static void main(String[] args) {
 		
@@ -36,27 +36,29 @@ public class Main {
 		bestFoundValue = utils.evaluateSolution(currentSolution, nodeList);
 		tabu.add(utils.mapCopy(currentSolution));
 		ArrayList<Integer> neighborsValue;
-		while(lastImproveIteration < 1000) {
+		while(lastImproveIteration < 5000) {
+			System.out.println(currentSolution);
 			totalIteration++;
 			lastImproveIteration++;
-			if(tabu.size() > 10 ) {
+			if(tabu.size() > 100 ) {
 				tabu.remove(0);
 			}
 			int bestNeighborIndex = 0;
 			int bestNeighborValue = 0;
 			boolean nextSolutionFound = false;
 			neighborsValue = new ArrayList<Integer>();
-			neighbors = utils.findNeighborhood(currentSolution, STATION_NUM, numOfTasks, dependencies);
+			neighbors = utils.findNeighborhood1(currentSolution, STATION_NUM, numOfTasks, dependencies);
 			for(int neighbor = 0 ; neighbor < neighbors.size() ; neighbor ++) {
 				neighborsValue.add(utils.evaluateSolution(neighbors.get(neighbor), nodeList));
 			}
 			while(!nextSolutionFound) {
+					
 					bestNeighborValue = Collections.min(neighborsValue);
 					bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
-					System.out.println(neighborsValue);
-					System.out.println(tabu.size());
+					
 					if(tabu.contains(neighbors.get(bestNeighborIndex))) {
 						neighbors.remove(neighbors.get(bestNeighborIndex));
+						neighborsValue.remove(new Integer(bestNeighborValue));
 					}
 					else {
 						if(bestNeighborValue < bestFoundValue) {

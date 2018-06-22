@@ -12,7 +12,6 @@ import java.util.Random;
 public class Utils{
 	
 		private static final String END_OF_FILE = "-1,-1";
-		private static final int TOTAL_NEIGHBOR = 30;
 		private static final int MOVEMENT = 3;
 		
 		
@@ -61,6 +60,58 @@ public class Utils{
 	    	return maxValue;
 	    }
 		
+		public ArrayList<Map<Integer, ArrayList<Integer>>> findNeighborhood1(Map<Integer, ArrayList<Integer>> currentSolution, int stationNumber, int numberOfTasks, Map<Integer, ArrayList<Integer>>  dependencies ){
+			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
+			Map<Integer, ArrayList<Integer>> currentNeighborBuild;
+			int taskNumberCurrentStation;
+			int taskNumberNextStation;
+			ArrayList<Integer> currentStation;
+			ArrayList<Integer> nextStation;
+			
+			for(int i = 1; i <= stationNumber - 1; i++) {
+				for(int j = 1 ; j<= MOVEMENT ; j++) {
+					currentNeighborBuild = mapCopy(currentSolution);
+					if(currentNeighborBuild.get(i).size() > j) {
+						int currentTask = 1;
+						currentStation = currentNeighborBuild.get(i);
+						nextStation = currentNeighborBuild.get(i+1);
+						while(currentTask <= j) {
+							taskNumberCurrentStation = currentStation.get(currentStation.size() - currentTask);
+							currentStation.remove(currentStation.size()-1);
+							nextStation.add(taskNumberCurrentStation);
+							currentTask++;
+						}
+						Collections.sort(nextStation);
+					}
+					if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
+							neighbors.add(mapCopy(currentNeighborBuild));
+					}
+				
+
+					currentNeighborBuild = mapCopy(currentSolution);
+					if(currentNeighborBuild.get(i+1).size() > j) {
+						int currentTask = 1;
+						currentStation = currentNeighborBuild.get(i);
+						nextStation = currentNeighborBuild.get(i+1);
+						while(currentTask <= j) {
+							taskNumberNextStation = nextStation.get(currentTask - 1);
+							nextStation.remove(new Integer(taskNumberNextStation));
+							currentStation.add(taskNumberNextStation);
+							currentTask++;
+						}
+						Collections.sort(currentStation);
+					}
+					if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
+							neighbors.add(mapCopy(currentNeighborBuild));
+					}
+				}
+			}
+			return neighbors;
+		}
+		
+		
+		
+		
 		
 		public ArrayList<Map<Integer, ArrayList<Integer>>> findNeighborhood(Map<Integer, ArrayList<Integer>> currentSolution, int stationNumber, int numberOfTasks, Map<Integer, ArrayList<Integer>>  dependencies ){
 			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
@@ -74,10 +125,10 @@ public class Utils{
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 5) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 100;
+							attempts = 5;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -88,6 +139,8 @@ public class Utils{
 								taskNumberCurrentStation = currentStation.get(randomTasks.get(randomTask - 1));
 								currentStation.remove(new Integer(taskNumberCurrentStation));
 								nextStation.add(taskNumberCurrentStation);
+								Collections.sort(nextStation);
+								Collections.sort(currentStation);
 							}
 							if(!neighbors.contains(currentNeighborBuild)) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
@@ -105,10 +158,10 @@ public class Utils{
 					}
 
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 5) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 100;
+							attempts = 5;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -119,6 +172,8 @@ public class Utils{
 								taskNumberNextStation = nextStation.get(randomTasks.get(randomTask - 1));
 								nextStation.remove(new Integer(taskNumberNextStation));
 								currentStation.add(taskNumberNextStation);
+								Collections.sort(currentStation);
+								Collections.sort(nextStation);
 							}
 							if(!neighbors.contains(currentNeighborBuild)) {
 								if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
@@ -190,7 +245,7 @@ public class Utils{
 		
 		
 		public int readNodeList(Map<Integer, Integer> nodeList, Map<Integer, ArrayList<Integer>> dependencies){
-			try(FileReader nodeListArq = new FileReader("HAHN.IN2")){
+			try(FileReader nodeListArq = new FileReader("WEE-MAG.IN2")){
 				BufferedReader readNodeList = new BufferedReader(nodeListArq);
 				int numberTasks = Integer.parseInt(readNodeList.readLine());
 				int taskCost;
