@@ -67,7 +67,7 @@ public class Utils{
 			int taskNumberNextStation;
 			ArrayList<Integer> currentStation;
 			ArrayList<Integer> nextStation;
-			
+			System.out.println(currentSolution);
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
 					currentNeighborBuild = mapCopy(currentSolution);
@@ -77,7 +77,7 @@ public class Utils{
 						nextStation = currentNeighborBuild.get(i+1);
 						while(currentTask <= j) {
 							taskNumberCurrentStation = currentStation.get(currentStation.size() - currentTask);
-							currentStation.remove(currentStation.size()-1);
+							currentStation.remove(currentStation.size()- currentTask);
 							nextStation.add(taskNumberCurrentStation);
 							currentTask++;
 						}

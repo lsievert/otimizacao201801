@@ -10,7 +10,7 @@ import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 public class Main {
 
 	//public static final int MAX_ITERATION = 200;
-	public static final int STATION_NUM = 20;
+	public static final int STATION_NUM = 10;
 	
 	public static void main(String[] args) {
 		
@@ -36,8 +36,7 @@ public class Main {
 		bestFoundValue = utils.evaluateSolution(currentSolution, nodeList);
 		tabu.add(utils.mapCopy(currentSolution));
 		ArrayList<Integer> neighborsValue;
-		while(lastImproveIteration < 5000) {
-			System.out.println(currentSolution);
+		while(lastImproveIteration < 5000) {System.out.println(currentSolution);
 			totalIteration++;
 			lastImproveIteration++;
 			if(tabu.size() > 100 ) {
