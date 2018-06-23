@@ -1,4 +1,10 @@
+package otimim;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,8 +15,8 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class Utils{
-	
+	public class Utils {
+		
 		private static final String END_OF_FILE = "-1,-1";
 		private static final int MOVEMENT = 3;
 		
@@ -76,8 +82,8 @@ public class Utils{
 						currentStation = currentNeighborBuild.get(i);
 						nextStation = currentNeighborBuild.get(i+1);
 						while(currentTask <= j) {
-							taskNumberCurrentStation = currentStation.get(currentStation.size() - currentTask);
-							currentStation.remove(currentStation.size()- currentTask);
+							taskNumberCurrentStation = currentStation.get(currentStation.size() -1);
+							currentStation.remove(currentStation.size() - 1);
 							nextStation.add(taskNumberCurrentStation);
 							currentTask++;
 						}
@@ -94,8 +100,8 @@ public class Utils{
 						currentStation = currentNeighborBuild.get(i);
 						nextStation = currentNeighborBuild.get(i+1);
 						while(currentTask <= j) {
-							taskNumberNextStation = nextStation.get(currentTask - 1);
-							nextStation.remove(new Integer(taskNumberNextStation));
+							taskNumberNextStation = nextStation.get(0);
+							nextStation.remove(0);
 							currentStation.add(taskNumberNextStation);
 							currentTask++;
 						}
@@ -125,10 +131,10 @@ public class Utils{
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
 					attempts = 1;
-					while(attempts != 5) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 5;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -158,10 +164,10 @@ public class Utils{
 					}
 
 					attempts = 1;
-					while(attempts != 5) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 5;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -202,19 +208,13 @@ public class Utils{
 		
 		
 		
-		
 		public void buildFirstSolution(ArrayList<Integer> arraySolution, Map<Integer, ArrayList<Integer>> solution, int stationNumber, int numOfTasks, Map<Integer, ArrayList<Integer>> dependencies) {
 			int tasksPerStation = numOfTasks / stationNumber;
-			Random random = new Random();
 			ArrayList<Integer> stationTasks;
 			for(int i = 1 ; i <= stationNumber ; i++ ) {
-				int numberOfTasksInStation = random.nextInt(tasksPerStation);
-				if(numberOfTasksInStation == 0) {
-					numberOfTasksInStation++;
-				}
 				if(i == 1) {
 					stationTasks = new ArrayList<Integer>();
-					for(int j = 0 ; j < numberOfTasksInStation - 1; j++ ) {
+					for(int j = 0 ; j < tasksPerStation ; j++ ) {
 						stationTasks.add(arraySolution.get(j));
 					}
 					solution.put(i, stationTasks);
@@ -224,7 +224,7 @@ public class Utils{
 						ArrayList<Integer> lastStation = solution.get(i-1);
 						int index = arraySolution.indexOf(new Integer(lastStation.get(lastStation.size() - 1)));
 						stationTasks = new ArrayList<Integer>();
-						for(int j = index + 1; j < index + 1  + numberOfTasksInStation  ; j++) {
+						for(int j = index + 1; j < index + 1  + tasksPerStation  ; j++) {
 							stationTasks.add(arraySolution.get(j));
 						}
 						solution.put(i, stationTasks);
@@ -241,6 +241,9 @@ public class Utils{
 				}
 			}
 		}
+		
+		
+		
 		
 		
 		
@@ -303,6 +306,4 @@ public class Utils{
 			}
 			return true;
 		}
-
-		
-}
+	}
