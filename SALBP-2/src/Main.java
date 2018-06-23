@@ -52,6 +52,7 @@ public class Main {
 				boolean nextSolutionFound = false;
 				neighborsValue = new ArrayList<Integer>();
 				tabusValue = new ArrayList<Integer>();
+				//Descobre valores de solucao dentro da lista tabu, pra comparar depois se é menor que todos os vizinhos encontrados
 				for(int tabuSolution = 0; tabuSolution < tabu.size() ; tabuSolution ++) {
 					tabusValue.add(utils.evaluateSolution(tabu.get(tabuSolution), nodeList));
 				}
@@ -73,6 +74,7 @@ public class Main {
 							tabu.remove(tabu.get(tabu.indexOf(new Integer(bestTabuValue))));
 						}
 						else {
+							//Tabu já contem a solução que seria utilizada, solucao descartada, procura a proxima no loop
 							if(tabu.contains(neighbors.get(bestNeighborIndex))) {
 								neighbors.remove(bestNeighborIndex);
 								neighborsValue.remove(bestNeighborIndex);

@@ -20,8 +20,11 @@ import java.util.Random;
 		private static final String END_OF_FILE = "-1,-1";
 		private static final int MOVEMENT = 3;
 		
-		
-	    private ArrayList<Integer> randValues(int quantityOfNumbers, ArrayList<Integer> station){
+		/*
+		 * Gera valores randomicos que são utilizadas para permutar as tarefas na função de encontra novos vizinhos
+		 */
+	   
+		private ArrayList<Integer> randValues(int quantityOfNumbers, ArrayList<Integer> station){
 	    	Random random = new Random();
 	    	int randomNumber;
 	    	ArrayList<Integer> numbers = new ArrayList<Integer>();
@@ -34,7 +37,11 @@ import java.util.Random;
 	    	return numbers;
 	    }
 		
-		public Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
+		/* 
+		 * Funçãozinha barbada para copiar uma estrutra de MAP
+		 */
+	    
+	    public Map<Integer, ArrayList<Integer>> mapCopy(Map<Integer, ArrayList<Integer>> original){
 	    	Map<Integer, ArrayList<Integer>> copy = new HashMap<Integer, ArrayList<Integer>>();
 	    	ArrayList<Integer> copyTasks;
 	    	ArrayList<Integer> originalTasks;
@@ -48,6 +55,11 @@ import java.util.Random;
 	    	}
 	    	return copy;
 	    }
+		
+		/*
+		 * Simplesmente avalia uma solução e devolve o maior valor de estação existente daquela solução recebida
+		 * Utilizada depois para comparação entre os vizinhos para descobrir qual é o melhor
+		 */
 		
 		public int evaluateSolution(Map<Integer, ArrayList<Integer>> solution, Map<Integer, Integer> taskCost) {
 	    	int totalValue;
@@ -66,58 +78,16 @@ import java.util.Random;
 	    	return maxValue;
 	    }
 		
-		public ArrayList<Map<Integer, ArrayList<Integer>>> findNeighborhood1(Map<Integer, ArrayList<Integer>> currentSolution, int stationNumber, int numberOfTasks, Map<Integer, ArrayList<Integer>>  dependencies ){
-			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
-			Map<Integer, ArrayList<Integer>> currentNeighborBuild;
-			int taskNumberCurrentStation;
-			int taskNumberNextStation;
-			ArrayList<Integer> currentStation;
-			ArrayList<Integer> nextStation;
-			System.out.println(currentSolution);
-			for(int i = 1; i <= stationNumber - 1; i++) {
-				for(int j = 1 ; j<= MOVEMENT ; j++) {
-					currentNeighborBuild = mapCopy(currentSolution);
-					if(currentNeighborBuild.get(i).size() > j) {
-						int currentTask = 1;
-						currentStation = currentNeighborBuild.get(i);
-						nextStation = currentNeighborBuild.get(i+1);
-						while(currentTask <= j) {
-							taskNumberCurrentStation = currentStation.get(currentStation.size() -1);
-							currentStation.remove(currentStation.size() - 1);
-							nextStation.add(taskNumberCurrentStation);
-							currentTask++;
-						}
-						Collections.sort(nextStation);
-					}
-					if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-							neighbors.add(mapCopy(currentNeighborBuild));
-					}
-				
-
-					currentNeighborBuild = mapCopy(currentSolution);
-					if(currentNeighborBuild.get(i+1).size() > j) {
-						int currentTask = 1;
-						currentStation = currentNeighborBuild.get(i);
-						nextStation = currentNeighborBuild.get(i+1);
-						while(currentTask <= j) {
-							taskNumberNextStation = nextStation.get(0);
-							nextStation.remove(0);
-							currentStation.add(taskNumberNextStation);
-							currentTask++;
-						}
-						Collections.sort(currentStation);
-					}
-					if(checkSolutionValidate(currentNeighborBuild, dependencies)) {
-							neighbors.add(mapCopy(currentNeighborBuild));
-					}
-				}
-			}
-			return neighbors;
-		}
 		
 		
 		
 		
+		/* A ideia dessa funcao é tomar as estaçoes par a par e fazer permutacoes entre as tarefas, que sao escolhidas de forma aleatoria
+		 * as permutações funcionam de maneira simples. A variável MOVEMENT guarda o numero máximo de tarefas que podem ser alocadas a outra estação
+		 * exemplo: a estacao 1 aloca uma de suas tarefas para a estação dois, o que dá origem a um vizinho
+		 * a  estação dois por sua vez tb aloca uma de suas tarefas a estação 1, o que da origem a outro vizinho, e assim sucessivamente, para duas, tres, n tarefas, 
+		 * dependendo da variável MOVEMENT.
+		 */
 		
 		public ArrayList<Map<Integer, ArrayList<Integer>>> findNeighborhood(Map<Integer, ArrayList<Integer>> currentSolution, int stationNumber, int numberOfTasks, Map<Integer, ArrayList<Integer>>  dependencies ){
 			ArrayList<Map<Integer, ArrayList<Integer>>> neighbors = new ArrayList<Map<Integer, ArrayList<Integer>>>();
@@ -130,6 +100,10 @@ import java.util.Random;
 			
 			for(int i = 1; i <= stationNumber - 1; i++) {
 				for(int j = 1 ; j<= MOVEMENT ; j++) {
+					
+					/*
+					 * Tomadas Par a Par as estações, essa seria a estação da esquerda, que manda tarefas suas para a estação da direita
+					 */
 					attempts = 1;
 					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
@@ -162,6 +136,10 @@ import java.util.Random;
 							}
 						}
 					}
+					
+					/*
+					 * Por sua vez, essa manda as tarefas da estação da direita para a estação mais a esquerda
+					 */
 
 					attempts = 1;
 					while(attempts != 100) {
@@ -207,6 +185,9 @@ import java.util.Random;
 		}
 		
 		
+		/*
+		 * Cria uma primeira solução valida, simplesmente balanceando o numero de nós entre as estações
+		 */
 		
 		public void buildFirstSolution(ArrayList<Integer> arraySolution, Map<Integer, ArrayList<Integer>> solution, int stationNumber, int numOfTasks, Map<Integer, ArrayList<Integer>> dependencies) {
 			int tasksPerStation = numOfTasks / stationNumber;
@@ -281,6 +262,9 @@ import java.util.Random;
 		}
 		
 		
+		/*
+		 * Verifica se uma dada solução respeita a precedencia das tarefas que estão guardadas no array de dependecias
+		 */
 		
 		public boolean checkSolutionValidate(Map<Integer, ArrayList<Integer>> possibleSolution, Map<Integer, ArrayList<Integer>> dependencies ) {
 			List<Integer> alreadyChecked = new ArrayList<Integer>();
