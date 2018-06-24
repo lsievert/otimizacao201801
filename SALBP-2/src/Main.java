@@ -40,15 +40,16 @@ public class Main {
 			tabu.add(utils.mapCopy(currentSolution));
 			ArrayList<Integer> neighborsValue;
 			ArrayList<Integer> tabusValue;
-			while(lastImproveIteration < 5000) {
+			while(lastImproveIteration < 200) {
 				totalIteration++;
 				lastImproveIteration++;
-				if(tabu.size() > 100 ) {
+				if(tabu.size() > 11 ) {
 					tabu.remove(0);
 				}
 				int bestNeighborIndex = 0;
 				int bestNeighborValue = 0;
 				int bestTabuValue;
+				int bestTabuIndex;
 				boolean nextSolutionFound = false;
 				neighborsValue = new ArrayList<Integer>();
 				tabusValue = new ArrayList<Integer>();
@@ -57,21 +58,20 @@ public class Main {
 					tabusValue.add(utils.evaluateSolution(tabu.get(tabuSolution), nodeList));
 				}
 				bestTabuValue = Collections.min(tabusValue);
+				bestTabuIndex = tabusValue.indexOf(new Integer(bestTabuValue));
 				neighbors = utils.findNeighborhood(currentSolution, STATION_NUM, numOfTasks, dependencies);
-				System.out.println(neighbors);
 				for(int neighbor = 0 ; neighbor < neighbors.size() ; neighbor ++) {
 					neighborsValue.add(utils.evaluateSolution(neighbors.get(neighbor), nodeList));
 				}
 				while(!nextSolutionFound) {
-						
+						System.out.println(neighborsValue);
 						bestNeighborValue = Collections.min(neighborsValue);
 						bestNeighborIndex = neighborsValue.indexOf(new Integer(bestNeighborValue));
-						System.out.println(bestFoundValue);
 						System.out.println(bestNeighborIndex);
 						System.out.println(neighbors.get(bestNeighborIndex));
 						if(bestNeighborValue > bestTabuValue) {
-							currentSolution = utils.mapCopy(tabu.get(tabu.indexOf(new Integer(bestTabuValue))));
-							tabu.remove(tabu.get(tabu.indexOf(new Integer(bestTabuValue))));
+							currentSolution = utils.mapCopy(tabu.get(bestTabuIndex));
+							tabu.remove(tabu.get(bestTabuIndex));
 						}
 						else {
 							//Tabu já contem a solução que seria utilizada, solucao descartada, procura a proxima no loop
@@ -83,6 +83,7 @@ public class Main {
 								if(bestNeighborValue < bestFoundValue) {
 									bestFoundValue = bestNeighborValue;
 									bestSolution = utils.mapCopy(neighbors.get(bestNeighborIndex));
+									currentSolution = utils.mapCopy(bestSolution);
 									lastImproveIteration = 0;
 								}
 							currentSolution = utils.mapCopy(neighbors.get(bestNeighborIndex));

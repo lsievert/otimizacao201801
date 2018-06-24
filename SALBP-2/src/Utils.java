@@ -105,10 +105,10 @@ import java.util.Random;
 					 * Tomadas Par a Par as estações, essa seria a estação da esquerda, que manda tarefas suas para a estação da direita
 					 */
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 200) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 100;
+							attempts = 200;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -142,10 +142,10 @@ import java.util.Random;
 					 */
 
 					attempts = 1;
-					while(attempts != 100) {
+					while(attempts != 200) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 100;
+							attempts = 200;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -278,12 +278,11 @@ import java.util.Random;
 						}
 						else {
 							for(int testDependencie : currentDependencies) {
-								if(alreadyChecked.contains(new Integer(testDependencie)) || nodeSet.contains(new Integer(testDependencie))) {
-									alreadyChecked.add(currentNode);;
-								}else {
+								if(!alreadyChecked.contains(new Integer(testDependencie)) && !nodeSet.contains(new Integer(testDependencie))) {
 									return false;
 								}
 							}
+							alreadyChecked.add(currentNode);
 						}
 					}
 				}
