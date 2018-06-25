@@ -105,10 +105,10 @@ import java.util.Random;
 					 * Tomadas Par a Par as estações, essa seria a estação da esquerda, que manda tarefas suas para a estação da direita
 					 */
 					attempts = 1;
-					while(attempts != 200) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i).size() <= j) {
-							attempts = 200;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -142,10 +142,10 @@ import java.util.Random;
 					 */
 
 					attempts = 1;
-					while(attempts != 200) {
+					while(attempts != 100) {
 						currentNeighborBuild = mapCopy(currentSolution);
 						if(currentNeighborBuild.get(i+1).size() <= j) {
-							attempts = 200;
+							attempts = 100;
 						}
 						else {
 							currentStation = currentNeighborBuild.get(i);
@@ -228,8 +228,8 @@ import java.util.Random;
 		
 		
 		
-		public int readNodeList(Map<Integer, Integer> nodeList, Map<Integer, ArrayList<Integer>> dependencies){
-			try(FileReader nodeListArq = new FileReader("WEE-MAG.IN2")){
+		public int readNodeList(Map<Integer, Integer> nodeList, Map<Integer, ArrayList<Integer>> dependencies, String fileName){
+			try(FileReader nodeListArq = new FileReader("LUTZ3.IN2")){
 				BufferedReader readNodeList = new BufferedReader(nodeListArq);
 				int numberTasks = Integer.parseInt(readNodeList.readLine());
 				int taskCost;
